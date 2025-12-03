@@ -1,85 +1,140 @@
-# 🧮 PAC – Image Compression using SVD / Compressão de Imagens usando SVD
+# Técnicas de Redução de Dimensionalidade — PCA aplicado ao MNIST
 
-This repository contains a small project for image compression using Singular Value Decomposition (SVD).
+Autores:
+- Esther Mattos - esthermattos@id.uff.br
+- Talisson Souza - talisedu@gmail.com
 
-Use the links below to jump directly to the English or Portuguese version of this README.
+Professor:
+- Dr. Marcos Lage - mlage@ic.uff.br
 
-- [English](#english)
-- [Português (BR)](#portuguese)
+Resumo:
+Este projeto demonstra o uso do Principal Component Analysis (PCA) como técnica de redução de dimensionalidade aplicada a imagens do dataset MNIST. Implementamos PCA manualmente usando apenas numpy e matplotlib para visualização, sem bibliotecas de alto nível (ex: sklearn), para que o professor possa inspecionar os passos de Álgebra Linear.
 
----
+Palavras-chave: Visão Computacional, PCA, Imagens, Redução de Dimensionalidade
 
-## English
+## improved_lda/pca MNIST — Guia rápido
 
-### Overview
+Este repositório contém scripts educacionais para comparar implementações manuais e de biblioteca de PCA e LDA sobre um subconjunto do MNIST (OpenML).  
+Arquivos principais (exemplos):
+- `improved_lda_mnist_modes.py` — LDA com modos: `manual_eig`, `manual_power`, `sklearn`.
+- `improved_pca_mnist_modes.py` — PCA com modos: `manual_eigh`, `manual_power`, `sklearn`.
 
-This project demonstrates how Singular Value Decomposition (SVD) can be used to compress grayscale images by representing an image as a matrix and reconstructing it using only the k largest singular values. The implementation emphasizes manual linear algebra operations to match the goals of a Computational Linear Algebra course (PAC).
+O objetivo é permitir comparar:
+- implementação totalmente manual (método das potências + deflação),
+- decomposição com funções numéricas (ex.: `np.linalg.eigh` / `np.linalg.eig`),
+- implementação de alto nível da biblioteca (`sklearn`).
 
-### Goal
-
-Implement SVD-based compression to trade off between compression ratio and visual quality by reconstructing an image using only the top-k singular values.
-
-### Steps
-
-1. Read and convert an image to a numeric matrix (grayscale).
-2. Implement linear algebra operations manually (matrix multiplication, diagonal matrix creation, norm calculation).
-3. Compute SVD and reconstruct the image with different k values (e.g. 5, 20, 50, 100).
-4. Display the original and reconstructed images and a plot of reconstruction error using Matplotlib.
-
-### Libraries
-
-• Pillow (PIL) — image I/O and conversion
-• NumPy — image array handling (limited use; core linear algebra implemented manually)
-• Matplotlib — visualization
-• math / builtins — basic numerical operations
-
-> Note: Core linear algebra routines (multiplication, diag creation, norms) are implemented by hand for learning purposes.
-
-### Expected Results
-
-• Side-by-side images showing the original and reconstructions for different k values.
-• A plot showing reconstruction error vs k.
+Saída:
+- Relatórios `.txt` em `outputs/`
+- Imagens das componentes em `outputs/` (PNG)
+- Log com todo o stdout salvo no relatório
 
 ---
 
-<a id="portuguese"></a>
-## Português (BR)
+## Requisitos (ambiente)
 
-### Visão geral
+Recomendo usar Python 3.8+ (funciona em Python 3.10/3.11/3.12). Pacotes necessários:
 
-Este projeto demonstra como a Decomposição em Valores Singulares (SVD) pode ser usada para comprimir imagens em escala de cinza, representando a imagem como uma matriz e reconstruindo-a usando apenas os k maiores valores singulares. A implementação enfatiza operações de álgebra linear feitas manualmente, alinhadas ao objetivo da disciplina de Processamento de Álgebra Computacional (PAC).
+- numpy
+- pandas
+- scikit-learn
+- matplotlib
 
-### Objetivo
-
-Implementar a compressão baseada em SVD para demonstrar o trade-off entre razão de compressão e qualidade visual, reconstruindo a imagem com apenas os top-k valores singulares.
-
-### Etapas
-
-1. Leitura e conversão da imagem para matriz numérica (tons de cinza).
-2. Implementação manual das operações de Álgebra Linear (multiplicação de matrizes, criação de matriz diagonal, cálculo de norma).
-3. Cálculo da SVD e reconstrução da imagem com diferentes valores de k (ex.: 5, 20, 50, 100).
-4. Exibição da imagem original e das reconstruções e um gráfico de erro de reconstrução usando Matplotlib.
-
-### Bibliotecas
-
-• Pillow (PIL) — leitura e conversão de imagem
-• NumPy — manipulação de arrays de imagem (uso limitado; as rotinas principais são manuais)
-• Matplotlib — visualização
-• math / builtins — operações numéricas básicas
-
-> Observação: As rotinas principais de álgebra linear foram implementadas manualmente para fins didáticos.
-
-### Resultados Esperados
-
-• Imagens lado a lado: original e reconstruções para diferentes k.
-• Gráfico com o erro de reconstrução em função de k.
+Você pode instalar tudo com pip.
 
 ---
 
-## Authors / Autoria
+## Instalação (passo a passo)
 
-• Esther Mattos
-• Thalisson Souza
+1. Crie (opcional) e ative um ambiente virtual:
 
-Universidade — 2025
+Linux / macOS:
+- python3 -m venv .venv
+- source .venv/bin/activate
+
+Windows (PowerShell):
+- python -m venv .venv
+- .\.venv\Scripts\Activate.ps1
+
+2. Atualize pip e instale dependências:
+
+pip install --upgrade pip
+pip install numpy pandas scikit-learn matplotlib
+
+(Alternativamente, crie um `requirements.txt` e rode `pip install -r requirements.txt`)
+
+Exemplo de `requirements.txt`:
+```
+numpy
+pandas
+scikit-learn
+matplotlib
+```
+
+---
+
+## Como rodar (comandos)
+
+Os scripts baixam MNIST via OpenML caso não esteja em cache. Por padrão usam um subsample para acelerar (`MAX_SAMPLES = 5000`).
+
+Executar LDA (modo default presente no arquivo):
+
+python improved_lda_mnist_modes.py
+
+Executar PCA (modo default presente no arquivo):
+
+python improved_pca_mnist_modes.py
+
+Observação: ambos os scripts definem variáveis no topo (`LDA_METHOD`, `PCA_METHOD`, `MAX_SAMPLES`, `RANDOM_STATE`). Para trocar o modo sem editar o arquivo, você pode importar e chamar a função principal com parâmetros:
+
+Exemplo rodando LDA com modo `manual_eig` (sem editar arquivo — executa diretamente no interpretador):
+python -c "from improved_lda_mnist_modes import run_lda; run_lda(max_samples=2000, lda_method='manual_eig')"
+
+Exemplo rodando PCA com modo `manual_power`:
+python -c "from improved_pca_mnist_modes import main as run_pca; run_pca(max_samples=2000, pca_method='manual_power')"
+
+(Observação: alguns scripts usam nome `main` ou `run_lda` — verifique a função principal do script. Se preferir, edite `LDA_METHOD` / `PCA_METHOD` no topo do arquivo.)
+
+---
+
+## Modos disponíveis
+
+LDA (`LDA_METHOD`):
+- `manual_eig` : resolve o problema generalizado via `np.linalg.eig` (didático/prático);
+- `manual_power`: usa power iteration + deflação (completamente manual; pode ser lento e instável numericamente);
+- `sklearn` : usa `sklearn.discriminant_analysis.LinearDiscriminantAnalysis`.
+
+PCA (`PCA_METHOD`):
+- `manual_eigh` : calcula autovalores/autovetores com `np.linalg.eigh`;
+- `manual_power`: power iteration + deflação para autovalores/autovetores (didático; lento);
+- `sklearn` : usa `sklearn.decomposition.PCA`.
+
+---
+
+## Saída / Onde encontrar resultados
+
+Após execução:
+- `outputs/lda_report.txt` ou `outputs/pca_report.txt` — relatório com métricas e log completo.
+- `outputs/lda_manual_comp_*.png` e `outputs/lda_sklearn_comp_*.png` — imagens das componentes LDA.
+- Análogos para PCA (se gerados).
+
+Se o `outputs/` não existir, os scripts criam automaticamente.
+
+---
+
+## Dicas e observações importantes
+
+- Modo `manual_power` pode ser bem mais lento — reduza `MAX_SAMPLES` (ex.: 1000) quando for testar ou rodar em máquina com recursos limitados.
+- Os cálculos “manuais” (power iteration + deflação) são didáticos; para uso prático prefira `np.linalg.eig`/`np.linalg.eigh` ou `sklearn` (mais estáveis e otimizados).
+- Se o download via OpenML falhar (problema de internet), baixe manualmente MNIST e adapte o script para carregar localmente.
+- Os scripts capturam o stdout em memória para incluir no relatório; em execuções longas isso pode consumir muita memória. Se for problema, comente a parte da captura (`Tee` / `_stdout_buf`) ou remova a escrita do log completo.
+- Para reproduzibilidade, use `RANDOM_STATE` definido no topo dos scripts.
+
+---
+
+## Problemas comuns
+
+- Erro de memória: reduza `MAX_SAMPLES`.
+- Timeout/erro ao baixar MNIST: verifique conexão ou tente novamente / usar cache.
+- Avisos do sklearn sobre parâmetros deprecados: os scripts removem o uso explícito de `multi_class` para evitar warnings; mantenha scikit-learn atualizado mas estável (ex.: 1.2+).
 
